@@ -1,0 +1,168 @@
+basePath: /
+definitions:
+  domain.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  domain.IdResponse:
+    properties:
+      id:
+        type: string
+    type: object
+  domain.Request:
+    properties:
+      compiler:
+        type: string
+      program:
+        type: string
+    type: object
+  domain.ResultResponse:
+    properties:
+      result:
+        type: string
+    type: object
+  domain.StatusResponse:
+    properties:
+      status:
+        $ref: '#/definitions/domain.TaskStatus'
+    type: object
+  domain.TaskStatus:
+    enum:
+    - created
+    - in_progress
+    - ready
+    - failed
+    type: string
+    x-enum-varnames:
+    - Created
+    - InProgress
+    - Ready
+    - Failed
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a code execution service that allows submitting programs for
+    execution and retrieving results asynchronously.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Code Executor API
+  version: "1.0"
+paths:
+  /result/{task_id}:
+    get:
+      description: Retrieve the execution result of a completed task
+      parameters:
+      - description: Task ID
+        in: path
+        name: task_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Task result retrieved
+          schema:
+            $ref: '#/definitions/domain.ResultResponse'
+        "400":
+          description: Missing task ID
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Task not found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "405":
+          description: Method not allowed
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "425":
+          description: Task not ready yet
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get task result
+      tags:
+      - tasks
+  /status/{task_id}:
+    get:
+      description: Retrieve the current status of a task by its ID
+      parameters:
+      - description: Task ID
+        in: path
+        name: task_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Task status retrieved
+          schema:
+            $ref: '#/definitions/domain.StatusResponse'
+        "400":
+          description: Missing task ID
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Task not found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "405":
+          description: Method not allowed
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get task status
+      tags:
+      - tasks
+  /task:
+    post:
+      consumes:
+      - application/json
+      description: Submit a program for execution and get a task ID for tracking
+      parameters:
+      - description: Task creation parameters
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Request'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Task created successfully
+          schema:
+            $ref: '#/definitions/domain.IdResponse'
+        "400":
+          description: Invalid request data
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "405":
+          description: Method not allowed
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "415":
+          description: Unsupported media type
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Create a new task
+      tags:
+      - tasks
+schemes:
+- http
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

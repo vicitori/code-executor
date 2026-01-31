@@ -1,6 +1,6 @@
 package storage
 
-import "task-service/internal/domain"
+import "code-executor/internal/domain"
 
 type TaskStorage interface {
 	CreateTask(userProgram, compilerName string) (string, error)

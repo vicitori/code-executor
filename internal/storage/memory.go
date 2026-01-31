@@ -1,11 +1,17 @@
 package storage
 
 import (
+	"errors"
 	"fmt"
 	"sync"
-	"time"
 
-	"task-service/internal/domain"
+	"github.com/google/uuid"
+
+	"code-executor/internal/domain"
+)
+
+var (
+	ErrTaskNotFound = errors.New("task not found")
 )
 
 type InMemoryStorage struct {
@@ -18,7 +24,7 @@ func NewInMemoryStorage() *InMemoryStorage {
 	return &InMemoryStorage{
 		tasks: make(map[string]*domain.Task),
 		genId: func() string {
-			return fmt.Sprintf("task-%d", time.Now().UnixNano())
+			return uuid.New().String()
 		},
 	}
 }
@@ -43,7 +49,7 @@ func (st *InMemoryStorage) GetTask(uuid string) (*domain.Task, error) {
 	defer st.mutex.RUnlock()
 	task, exists := st.tasks[uuid]
 	if !exists {
-		return nil, fmt.Errorf("task with uuid %s is not found", uuid)
+		return nil, fmt.Errorf("%w: %s", ErrTaskNotFound, uuid)
 	}
 	return task, nil
 }
@@ -53,18 +59,18 @@ func (st *InMemoryStorage) UpdateStatus(uuid string, status domain.TaskStatus) e
 	defer st.mutex.Unlock()
 	task, exists := st.tasks[uuid]
 	if !exists {
-		return fmt.Errorf("task with uuid %s is not found", uuid)
+		return fmt.Errorf("%w: %s", ErrTaskNotFound, uuid)
 	}
 	task.Status = status
 	return nil
 }
 
 func (st *InMemoryStorage) GetResult(uuid string) (string, error) {
-	st.mutex.Lock()
-	defer st.mutex.Unlock()
+	st.mutex.RLock()
+	defer st.mutex.RUnlock()
 	task, exists := st.tasks[uuid]
 	if !exists {
-		return "", fmt.Errorf("task with uuid %s is not found", uuid)
+		return "", fmt.Errorf("%w: %s", ErrTaskNotFound, uuid)
 	}
 	res := task.Result
 	return res, nil
@@ -75,7 +81,7 @@ func (st *InMemoryStorage) SetResult(uuid, result string) error {
 	defer st.mutex.Unlock()
 	task, exists := st.tasks[uuid]
 	if !exists {
-		return fmt.Errorf("task with uuid %s is not found", uuid)
+		return fmt.Errorf("%w: %s", ErrTaskNotFound, uuid)
 	}
 	task.Result = result
 	task.Status = domain.Ready
