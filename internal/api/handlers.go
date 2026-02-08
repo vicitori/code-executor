@@ -28,17 +28,10 @@ func Init(storage storage.TaskStorage) {
 }
 
 // LoadTask godoc
-// @Summary Create a new task
-// @Description Submit a program for execution and get a task ID for tracking
-// @Tags tasks
 // @Accept json
 // @Produce json
-// @Param request body domain.Request true "Task creation parameters"
-// @Success 201 {object} domain.IdResponse "Task created successfully"
-// @Failure 400 {object} domain.ErrorResponse "Invalid request data"
-// @Failure 405 {object} domain.ErrorResponse "Method not allowed"
-// @Failure 415 {object} domain.ErrorResponse "Unsupported media type"
-// @Failure 500 {object} domain.ErrorResponse "Internal server error"
+// @Param request body domain.Request true "Task data"
+// @Success 201 {object} domain.IdResponse
 // @Router /task [post]
 func LoadTask(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -82,15 +75,9 @@ func LoadTask(w http.ResponseWriter, r *http.Request) {
 }
 
 // CheckTaskStatus godoc
-// @Summary Get task status
-// @Description Retrieve the current status of a task by its ID
-// @Tags tasks
 // @Produce json
 // @Param task_id path string true "Task ID"
-// @Success 200 {object} domain.StatusResponse "Task status retrieved"
-// @Failure 400 {object} domain.ErrorResponse "Missing task ID"
-// @Failure 404 {object} domain.ErrorResponse "Task not found"
-// @Failure 405 {object} domain.ErrorResponse "Method not allowed"
+// @Success 200 {object} domain.StatusResponse
 // @Router /status/{task_id} [get]
 func CheckTaskStatus(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
@@ -112,16 +99,9 @@ func CheckTaskStatus(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetResult godoc
-// @Summary Get task result
-// @Description Retrieve the execution result of a completed task
-// @Tags tasks
 // @Produce json
 // @Param task_id path string true "Task ID"
-// @Success 200 {object} domain.ResultResponse "Task result retrieved"
-// @Failure 400 {object} domain.ErrorResponse "Missing task ID"
-// @Failure 404 {object} domain.ErrorResponse "Task not found"
-// @Failure 405 {object} domain.ErrorResponse "Method not allowed"
-// @Failure 425 {object} domain.ErrorResponse "Task not ready yet"
+// @Success 200 {object} domain.ResultResponse
 // @Router /result/{task_id} [get]
 func GetResult(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	_ "code-executor/docs"
 	"code-executor/internal/api"
 	"code-executor/internal/storage"
 
@@ -12,23 +13,7 @@ import (
 
 // @title Code Executor API
 // @version 1.0
-// @description This is a code execution service that allows submitting programs for execution and retrieving results asynchronously.
-// @termsOfService http://swagger.io/terms/
-
-// @contact.name API Support
-// @contact.url http://www.swagger.io/support
-// @contact.email support@swagger.io
-
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
 // @host localhost:8080
-// @BasePath /
-// @schemes http
-
-// @securityDefinitions.apikey BearerAuth
-// @in header
-// @name Authorization
 func main() {
 	storageInstance := storage.NewInMemoryStorage()
 	api.Init(storageInstance)

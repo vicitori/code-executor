@@ -1,36 +1,17 @@
 {
-    "schemes": [
-        "http"
-    ],
     "swagger": "2.0",
     "info": {
-        "description": "This is a code execution service that allows submitting programs for execution and retrieving results asynchronously.",
         "title": "Code Executor API",
-        "termsOfService": "http://swagger.io/terms/",
-        "contact": {
-            "name": "API Support",
-            "url": "http://www.swagger.io/support",
-            "email": "support@swagger.io"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        },
+        "contact": {},
         "version": "1.0"
     },
     "host": "localhost:8080",
-    "basePath": "/",
     "paths": {
         "/result/{task_id}": {
             "get": {
-                "description": "Retrieve the execution result of a completed task",
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "tasks"
-                ],
-                "summary": "Get task result",
                 "parameters": [
                     {
                         "type": "string",
@@ -42,33 +23,9 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Task result retrieved",
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/domain.ResultResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Missing task ID",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Task not found",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "405": {
-                        "description": "Method not allowed",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "425": {
-                        "description": "Task not ready yet",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
                         }
                     }
                 }
@@ -76,14 +33,9 @@
         },
         "/status/{task_id}": {
             "get": {
-                "description": "Retrieve the current status of a task by its ID",
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "tasks"
-                ],
-                "summary": "Get task status",
                 "parameters": [
                     {
                         "type": "string",
@@ -95,27 +47,9 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Task status retrieved",
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/domain.StatusResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Missing task ID",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Task not found",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "405": {
-                        "description": "Method not allowed",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
                         }
                     }
                 }
@@ -123,20 +57,15 @@
         },
         "/task": {
             "post": {
-                "description": "Submit a program for execution and get a task ID for tracking",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "tasks"
-                ],
-                "summary": "Create a new task",
                 "parameters": [
                     {
-                        "description": "Task creation parameters",
+                        "description": "Task data",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -147,33 +76,9 @@
                 ],
                 "responses": {
                     "201": {
-                        "description": "Task created successfully",
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/domain.IdResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request data",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "405": {
-                        "description": "Method not allowed",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "415": {
-                        "description": "Unsupported media type",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
                         }
                     }
                 }
@@ -181,14 +86,6 @@
         }
     },
     "definitions": {
-        "domain.ErrorResponse": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                }
-            }
-        },
         "domain.IdResponse": {
             "type": "object",
             "properties": {
@@ -238,13 +135,6 @@
                 "Ready",
                 "Failed"
             ]
-        }
-    },
-    "securityDefinitions": {
-        "BearerAuth": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
         }
     }
 }

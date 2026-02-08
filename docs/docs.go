@@ -9,16 +9,7 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "http://swagger.io/terms/",
-        "contact": {
-            "name": "API Support",
-            "url": "http://www.swagger.io/support",
-            "email": "support@swagger.io"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        },
+        "contact": {},
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -26,14 +17,9 @@ const docTemplate = `{
     "paths": {
         "/result/{task_id}": {
             "get": {
-                "description": "Retrieve the execution result of a completed task",
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "tasks"
-                ],
-                "summary": "Get task result",
                 "parameters": [
                     {
                         "type": "string",
@@ -45,33 +31,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Task result retrieved",
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/domain.ResultResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Missing task ID",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Task not found",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "405": {
-                        "description": "Method not allowed",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "425": {
-                        "description": "Task not ready yet",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
                         }
                     }
                 }
@@ -79,14 +41,9 @@ const docTemplate = `{
         },
         "/status/{task_id}": {
             "get": {
-                "description": "Retrieve the current status of a task by its ID",
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "tasks"
-                ],
-                "summary": "Get task status",
                 "parameters": [
                     {
                         "type": "string",
@@ -98,27 +55,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Task status retrieved",
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/domain.StatusResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Missing task ID",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Task not found",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "405": {
-                        "description": "Method not allowed",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
                         }
                     }
                 }
@@ -126,20 +65,15 @@ const docTemplate = `{
         },
         "/task": {
             "post": {
-                "description": "Submit a program for execution and get a task ID for tracking",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "tasks"
-                ],
-                "summary": "Create a new task",
                 "parameters": [
                     {
-                        "description": "Task creation parameters",
+                        "description": "Task data",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -150,33 +84,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Task created successfully",
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/domain.IdResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request data",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "405": {
-                        "description": "Method not allowed",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "415": {
-                        "description": "Unsupported media type",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
                         }
                     }
                 }
@@ -184,14 +94,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "domain.ErrorResponse": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                }
-            }
-        },
         "domain.IdResponse": {
             "type": "object",
             "properties": {
@@ -242,13 +144,6 @@ const docTemplate = `{
                 "Failed"
             ]
         }
-    },
-    "securityDefinitions": {
-        "BearerAuth": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
-        }
     }
 }`
 
@@ -256,10 +151,10 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:8080",
-	BasePath:         "/",
-	Schemes:          []string{"http"},
+	BasePath:         "",
+	Schemes:          []string{},
 	Title:            "Code Executor API",
-	Description:      "This is a code execution service that allows submitting programs for execution and retrieving results asynchronously.",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
